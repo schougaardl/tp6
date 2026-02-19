@@ -7,7 +7,7 @@ import arcade
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_TITLE = "Starting Template"
-
+choix = ["roche", "papier, sciseaux"]
 
 class GameView(arcade.View):
     """
@@ -26,6 +26,7 @@ class GameView(arcade.View):
         # If you have sprite lists, you should create them here,
         # and set them to None
 
+
     def reset(self):
         """Reset the game to the initial state."""
         # Do changes needed to restart the game here if you want to support that
@@ -39,7 +40,7 @@ class GameView(arcade.View):
         # This command should happen before we start drawing. It will clear
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
-
+        arcade.draw_text("Roche Papier Ciseaux", 674, 650)
         # Call draw() on all your sprite lists below
 
     def on_update(self, delta_time):
@@ -75,6 +76,9 @@ class GameView(arcade.View):
         """
         Called when the user presses a mouse button.
         """
+
+        choix_ord = random.choice(choix)
+
         pass
 
     def on_mouse_release(self, x, y, button, key_modifiers):
