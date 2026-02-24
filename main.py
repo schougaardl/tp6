@@ -3,6 +3,7 @@ jeux de roche papier sciseaux
 """
 import random
 import arcade
+import arcade.color
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -40,7 +41,14 @@ class GameView(arcade.View):
         # This command should happen before we start drawing. It will clear
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
-        arcade.draw_text("Roche Papier Ciseaux", 674, 650)
+        arcade.draw_text("Roche Papier Ciseaux", 340, 600, arcade.color.WHITE, 60)
+        arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
+        r = arcade.LRBT(320, 370, 150, 220)
+        arcade.draw_rect_filled(r, (255, 255, 255) , 11)
+        arcade.draw_circle_filled(180,180, 35, arcade.color.TAUPE_GRAY, 11, 7)
+        arcade.draw_circle_filled(350, 400, 100, arcade.color.BANANA_YELLOW)
+        arcade.draw_text("(0_0)", 252, 375, arcade.color.BLACK, 70)
+        arcade.draw_text(">8", 460, 150, arcade.color.RED, 80)
         # Call draw() on all your sprite lists below
 
     def on_update(self, delta_time):
