@@ -24,8 +24,12 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.AMAZON
 
-        # If you have sprite lists, you should create them here,
-        # and set them to None
+        self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
+        self.player_sprite.position = (200, 200)
+        self.players_sprites = arcade.SpriteList()
+
+        self.players_sprites.append(self.player_sprite)
+
 
 
     def reset(self):
@@ -49,7 +53,9 @@ class GameView(arcade.View):
         arcade.draw_circle_filled(350, 400, 100, arcade.color.BANANA_YELLOW)
         arcade.draw_text("(0_0)", 252, 375, arcade.color.BLACK, 70)
         arcade.draw_text(">8", 460, 150, arcade.color.RED, 80)
-        # Call draw() on all your sprite lists below
+
+
+        self.players_sprites.draw()
 
     def on_update(self, delta_time):
         """
