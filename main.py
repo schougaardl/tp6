@@ -24,10 +24,16 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.AMAZON
 
-        self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
-        self.player_sprite.position = (200, 200)
-        self.players_sprites = arcade.SpriteList()
+        self.scissor_sprite = arcade.Sprite( "assets/scissors.png", scale= 0.5)
+        self.scissor_sprite.position = (350, 300)
 
+        self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
+        self.player_sprite.position = (350, 400)
+
+        self.players_sprites = arcade.SpriteList()
+        self.scissor_sprites = arcade.SpriteList()
+
+        self.scissor_sprites.append(self.player_sprite)
         self.players_sprites.append(self.player_sprite)
 
 
@@ -47,12 +53,7 @@ class GameView(arcade.View):
         self.clear()
         arcade.draw_text("Roche Papier Ciseaux", 340, 600, arcade.color.WHITE, 60)
         arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
-        r = arcade.LRBT(320, 370, 150, 220)
-        arcade.draw_rect_filled(r, (255, 255, 255) , 11)
-        arcade.draw_circle_filled(180,180, 35, arcade.color.TAUPE_GRAY, 11, 7)
-        arcade.draw_circle_filled(350, 400, 100, arcade.color.BANANA_YELLOW)
-        arcade.draw_text("(0_0)", 252, 375, arcade.color.BLACK, 70)
-        arcade.draw_text(">8", 460, 150, arcade.color.RED, 80)
+
 
 
         self.players_sprites.draw()
