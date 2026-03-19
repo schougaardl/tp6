@@ -24,16 +24,26 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.AMAZON
 
+        self.paper_sprite = arcade.Sprite("assets/spaper.png.png", scale=0.5)
+        self.paper_sprite.position = (400, 200)
+
+        self.rock_sprite = arcade.Sprite("assets/srock.png", scale=0.5)
+        self.rock_sprite.position = (200, 200)
+
         self.scissor_sprite = arcade.Sprite( "assets/scissors.png", scale= 0.5)
-        self.scissor_sprite.position = (350, 300)
+        self.scissor_sprite.position = (600, 200)
 
         self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
         self.player_sprite.position = (350, 400)
 
+        self.paper_sprite_list = arcade.SpriteList()
+        self.rock_sprite_list = arcade.SpriteList()
         self.players_sprites = arcade.SpriteList()
-        self.scissor_sprites = arcade.SpriteList()
+        self.scissor_sprite_list = arcade.SpriteList()
 
-        self.scissor_sprites.append(self.player_sprite)
+        self.paper_sprite_list.append(self.paper_sprite)
+        self.rock_sprite_list.append(self.rock_sprite)
+        self.scissor_sprite_list.append(self.scissor_sprite)
         self.players_sprites.append(self.player_sprite)
 
 
@@ -57,6 +67,9 @@ class GameView(arcade.View):
 
 
         self.players_sprites.draw()
+        self.scissor_sprite_list.draw()
+        self.rock_sprite_list.draw()
+        self.paper_sprite_list.draw()
 
     def on_update(self, delta_time):
         """
@@ -92,7 +105,7 @@ class GameView(arcade.View):
         Called when the user presses a mouse button.
         """
 
-        choix_ord = random.choice(choix)
+        
 
         pass
 
