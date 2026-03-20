@@ -24,14 +24,17 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.AMAZON
 
-        self.paper_sprite = arcade.Sprite("assets/spaper.png.png", scale=0.5)
-        self.paper_sprite.position = (400, 200)
+        self.ord_sprite = arcade.Sprite("assets/compy.png", scale=2.3)
+        self.ord_sprite.position = (900, 400)
+
+        self.paper_sprite = arcade.Sprite("assets/spaper.png", scale=0.5)
+        self.paper_sprite.position = (345, 170)
 
         self.rock_sprite = arcade.Sprite("assets/srock.png", scale=0.5)
-        self.rock_sprite.position = (200, 200)
+        self.rock_sprite.position = (190, 170)
 
         self.scissor_sprite = arcade.Sprite( "assets/scissors.png", scale= 0.5)
-        self.scissor_sprite.position = (600, 200)
+        self.scissor_sprite.position = (520, 170)
 
         self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
         self.player_sprite.position = (350, 400)
@@ -45,6 +48,7 @@ class GameView(arcade.View):
         self.rock_sprite_list.append(self.rock_sprite)
         self.scissor_sprite_list.append(self.scissor_sprite)
         self.players_sprites.append(self.player_sprite)
+        self.players_sprites.append(self.ord_sprite)
 
 
 
