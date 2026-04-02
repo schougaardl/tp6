@@ -2,13 +2,18 @@
 jeux de roche papier sciseaux
 """
 import random
+
 import arcade
 import arcade.color
+
+from game_state import GameState
+
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_TITLE = "Starting Template"
-choix = ["roche", "papier, sciseaux"]
+
+
 
 class GameView(arcade.View):
     """
@@ -50,7 +55,10 @@ class GameView(arcade.View):
         self.players_sprites.append(self.player_sprite)
         self.players_sprites.append(self.ord_sprite)
 
-
+        self.game_state = GameState.NOT_STARTED
+        self.choix = ""
+        self.choix_ord = ""
+        self.choix_list = ["roche","papier","sciseau"]
 
     def reset(self):
         """Reset the game to the initial state."""
@@ -66,14 +74,14 @@ class GameView(arcade.View):
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
         arcade.draw_text("Roche Papier Ciseaux", 340, 600, arcade.color.WHITE, 60)
-        arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
-
-
-
-        self.players_sprites.draw()
-        self.scissor_sprite_list.draw()
-        self.rock_sprite_list.draw()
-        self.paper_sprite_list.draw()
+        if self.game_state == GameState.NOT_STARTED :
+            arcade.draw_text("apuiyer sur espace pour commencer", 200, 400,arcade.color.WHITE,50)
+        elif self.game_state == GameState.ROUND_ACTIVE :
+            arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
+            self.players_sprites.draw()
+            self.scissor_sprite_list.draw()
+            self.rock_sprite_list.draw()
+            self.paper_sprite_list.draw()
 
     def on_update(self, delta_time):
         """
@@ -81,7 +89,20 @@ class GameView(arcade.View):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        pass
+        if self.game_state != GameState.ROUND_ACTIVE:
+            return
+
+        if self.choix == "":
+            return
+
+        self.choix_ord = random.choice(self.choix_list)
+        print(self.choix_ord)
+
+        if self.choix == self.choix_ord:
+            print("nulle")
+
+        # si déterminé gagnant, passer en ROUND_DONE
+        self.game_state = GameState.ROUND_DONE
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -90,34 +111,35 @@ class GameView(arcade.View):
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
-        pass
+        if key == arcade.key.SPACE:
+            if self.game_state == GameState.NOT_STARTED:
+                self.game_state = GameState.ROUND_ACTIVE
+            if self.game_state == GameState.ROUND_DONE:
+                self.game_state = GameState.ROUND_ACTIVE
+                self.choix = ""
+                self.choix_ord = ""
 
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-        """
-        pass
-
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
-        pass
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """
         Called when the user presses a mouse button.
         """
+        if self.game_state != GameState.ROUND_ACTIVE:
+            return
 
-        
 
-        pass
+        if self.rock_sprite.collides_with_point((x, y)):
+            self.choix = "roche"
+            print((self.choix))
+        elif self.paper_sprite.collides_with_point((x, y)):
+            self.choix = "Papier"
+            print((self.choix))
+        elif self.scissor_sprite.collides_with_point((x, y)):
+            self.choix = "sciseau"
+            print((self.choix))
 
-    def on_mouse_release(self, x, y, button, key_modifiers):
-        """
-        Called when a user releases a mouse button.
-        """
-        pass
+
+
 
 
 def main():
