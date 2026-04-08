@@ -101,6 +101,24 @@ class GameView(arcade.View):
         if self.choix == self.choix_ord:
             print("nulle")
 
+        if self.choix == "papier" and self.choix_ord == "sciseau":
+            print("point ord")
+
+        if self.choix == "sciseau" and self.choix_ord == "roche":
+            print("point ord")
+
+        if self.choix == "roche" and self.choix_ord == "papier":
+            print("point ord")
+
+        if self.choix_ord == "papier" and self.choix == "sciseau":
+            print("point joueur")
+
+        if self.choix_ord == "sciseau" and self.choix == "roche":
+            print("point joueur")
+
+        if self.choix_ord == "roche" and self.choix == "papier":
+            print("point joueur")
+
         # si déterminé gagnant, passer en ROUND_DONE
         self.game_state = GameState.ROUND_DONE
 
@@ -132,7 +150,7 @@ class GameView(arcade.View):
             self.choix = "roche"
             print((self.choix))
         elif self.paper_sprite.collides_with_point((x, y)):
-            self.choix = "Papier"
+            self.choix = "papier"
             print((self.choix))
         elif self.scissor_sprite.collides_with_point((x, y)):
             self.choix = "sciseau"
