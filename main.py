@@ -30,7 +30,7 @@ class GameView(arcade.View):
         self.background_color = arcade.color.AMAZON
 
         self.ord_sprite = arcade.Sprite("assets/compy.png", scale=2.3)
-        self.ord_sprite.position = (900, 400)
+        self.ord_sprite.position = (950, 400)
 
         self.paper_sprite = arcade.Sprite("assets/spaper.png", scale=0.5)
         self.paper_sprite.position = (345, 170)
@@ -59,7 +59,9 @@ class GameView(arcade.View):
         self.choix = ""
         self.choix_ord = ""
         self.choix_list = ["roche","papier","sciseau"]
-
+        self.resultat = " "
+        self.score_J = 0
+        self.score_O = 0
     def reset(self):
         """Reset the game to the initial state."""
         # Do changes needed to restart the game here if you want to support that
@@ -73,15 +75,19 @@ class GameView(arcade.View):
         # This command should happen before we start drawing. It will clear
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
-        arcade.draw_text("Roche Papier Ciseaux", 340, 600, arcade.color.WHITE, 60)
+        arcade.draw_text("Roche Papier Ciseaux", 0, 600, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH )
         if self.game_state == GameState.NOT_STARTED :
-            arcade.draw_text("apuiyer sur espace pour commencer", 200, 400,arcade.color.WHITE,50)
+            arcade.draw_text("apuiyer sur espace pour commencer", 0, 400,arcade.color.WHITE,50, align="center", width=WINDOW_WIDTH)
         elif self.game_state == GameState.ROUND_ACTIVE :
             arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
             self.players_sprites.draw()
             self.scissor_sprite_list.draw()
             self.rock_sprite_list.draw()
             self.paper_sprite_list.draw()
+            arcade.draw_text("apuiyer sur espace pour commencer", 0, 400, arcade.color.WHITE, 50, align = self.players# _sprites)
+
+        elif self.game_state == GameState.ROUND_DONE:
+            arcade.draw_text( self.resultat, 0, WINDOW_HEIGHT/2, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH)
 
     def on_update(self, delta_time):
         """
@@ -99,28 +105,36 @@ class GameView(arcade.View):
         print(self.choix_ord)
 
         if self.choix == self.choix_ord:
-            print("nulle")
+            self.resultat = ("NULL")
 
         if self.choix == "papier" and self.choix_ord == "sciseau":
-            print("point ord")
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
         if self.choix == "sciseau" and self.choix_ord == "roche":
-            print("point ord")
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
         if self.choix == "roche" and self.choix_ord == "papier":
-            print("point ord")
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
         if self.choix_ord == "papier" and self.choix == "sciseau":
-            print("point joueur")
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
         if self.choix_ord == "sciseau" and self.choix == "roche":
-            print("point joueur")
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
         if self.choix_ord == "roche" and self.choix == "papier":
-            print("point joueur")
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
         # si déterminé gagnant, passer en ROUND_DONE
         self.game_state = GameState.ROUND_DONE
+
+
 
     def on_key_press(self, key, key_modifiers):
         """
