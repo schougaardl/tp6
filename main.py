@@ -75,87 +75,78 @@ class GameView(arcade.View):
         # This command should happen before we start drawing. It will clear
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
-        arcade.draw_text("Roche Papier Ciseaux", 0, 600, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH )
+        arcade.draw_text("Roche Papier Ciseaux", 0, 650, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH )
         if self.game_state == GameState.NOT_STARTED :
             arcade.draw_text("apuiyer sur espace pour commencer", 0, 400,arcade.color.WHITE,50, align="center", width=WINDOW_WIDTH)
-
-        elif self.game_state == GameState.ROUND_ACTIVE :
+        else:
             arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
             self.players_sprites.draw()
             self.scissor_sprite_list.draw()
             self.rock_sprite_list.draw()
             self.paper_sprite_list.draw()
-            arcade.draw_text(f"point: {self.score_J}", 300, 250, arcade.color.WHITE, 20)
-            arcade.draw_text(f"point: {self.score_O}", 910, 250, arcade.color.WHITE, 20)
+                
+            if self.game_state == GameState.ROUND_ACTIVE:
+                arcade.draw_text(f"point: {self.score_J}", 300, 250, arcade.color.WHITE, 20)
+                arcade.draw_text(f"point: {self.score_O}", 910, 250, arcade.color.WHITE, 20)
 
-        elif self.game_state == GameState.ROUND_DONE:
-            arcade.draw_text( self.resultat, 0, WINDOW_HEIGHT/2, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH)
+            elif self.game_state == GameState.ROUND_DONE:
+                arcade.draw_text( self.resultat, 0,550, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH)
 
-        elif self.game_state == GameState.GAME_OVER:
-            arcade.draw_text("Apuiyer sur espace pour recommencer", 0, 300, arcade.color.WHITE, 50, align="center",width=WINDOW_WIDTH)
+            elif self.game_state == GameState.GAME_OVER:
+                arcade.draw_text("Apuiyer sur espace pour recommencer", 0, 300, arcade.color.WHITE, 50, align="center",width=WINDOW_WIDTH)
 
-            if self.score_J > self.score_O:
-                arcade.draw_text("Vous aver gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
+                if self.score_J > self.score_O:
+                    arcade.draw_text("Vous aver gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
 
-            else:
-                arcade.draw_text("Vous aver perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
+                else:
+                    arcade.draw_text("Vous aver perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
     def on_update(self, delta_time):
         """
         All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-
-
         if self.game_state != GameState.ROUND_ACTIVE:
             return
 
         if self.choix == "":
             return
 
-        else:
+        self.choix_ord = random.choice(self.choix_list)
+        print(self.choix_ord)
 
-            if self.score_J == 3:
-                self.game_state = GameState.GAME_OVER
+        if self.choix == self.choix_ord:
+            self.resultat = ("NULL")
 
-            if self.score_O == 3:
-                self.game_state = GameState.GAME_OVER
+        if self.choix == "papier" and self.choix_ord == "sciseau":
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
-            else:
-                self.choix_ord = random.choice(self.choix_list)
-                print(self.choix_ord)
+        if self.choix == "sciseau" and self.choix_ord == "roche":
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
+        if self.choix == "roche" and self.choix_ord == "papier":
+            self.resultat = "POINT ORDINATEUR"
+            self.score_O += 1
 
-                if self.choix == self.choix_ord:
-                    self.resultat = ("NULL")
+        if self.choix_ord == "papier" and self.choix == "sciseau":
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
-                if self.choix == "papier" and self.choix_ord == "sciseau":
-                    self.resultat = "POINT ORDINATEUR"
-                    self.score_O += 1
+        if self.choix_ord == "sciseau" and self.choix == "roche":
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
-                if self.choix == "sciseau" and self.choix_ord == "roche":
-                    self.resultat = "POINT ORDINATEUR"
-                    self.score_O += 1
+        if self.choix_ord == "roche" and self.choix == "papier":
+            self.resultat = "POINT JOUEUR"
+            self.score_J += 1
 
-                if self.choix == "roche" and self.choix_ord == "papier":
-                    self.resultat = "POINT ORDINATEUR"
-                    self.score_O += 1
+        self.game_state = GameState.ROUND_DONE
 
-                if self.choix_ord == "papier" and self.choix == "sciseau":
-                    self.resultat = "POINT JOUEUR"
-                    self.score_J += 1
-
-                if self.choix_ord == "sciseau" and self.choix == "roche":
-                    self.resultat = "POINT JOUEUR"
-                    self.score_J += 1
-
-                if self.choix_ord == "roche" and self.choix == "papier":
-                    self.resultat = "POINT JOUEUR"
-                    self.score_J += 1
-
-             # si déterminé gagnant, passer en ROUND_DONE
-                self.game_state = GameState.ROUND_DONE
-
+         # si déterminé gagnant, passer en ROUND_DONE
+        if self.score_J == 3 or self.score_O == 3:
+            self.game_state = GameState.GAME_OVER
 
 
     def on_key_press(self, key, key_modifiers):
@@ -176,12 +167,6 @@ class GameView(arcade.View):
                 self.game_state = GameState.ROUND_ACTIVE
                 self.choix = ""
                 self.choix_ord = ""
-
-            if self.score_J == 3:
-                self.game_state = GameState.GAME_OVER
-
-            if self.score_O == 3:
-                self.game_state = GameState.GAME_OVER
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """
