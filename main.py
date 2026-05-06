@@ -2,6 +2,7 @@
 jeux de roche papier sciseaux
 """
 import random
+import time
 
 import arcade
 import arcade.color
@@ -62,9 +63,14 @@ class GameView(arcade.View):
         self.resultat = " "
         self.score_J = 0
         self.score_O = 0
+
+        self.reset = False
     def reset(self):
         """Reset the game to the initial state."""
         # Do changes needed to restart the game here if you want to support that
+        if self.reset == True :
+            self.clear
+
         pass
 
     def on_draw(self):
@@ -78,34 +84,51 @@ class GameView(arcade.View):
         arcade.draw_text("Roche Papier Ciseaux", 0, 650, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH )
         if self.game_state == GameState.NOT_STARTED :
             arcade.draw_text("apuiyer sur espace pour commencer", 0, 400,arcade.color.WHITE,50, align="center", width=WINDOW_WIDTH)
+
+        elif self.game_state == GameState.GAME_OVER:
+
+            arcade.draw_text("Apuiyer sur espace pour recommencer", 0, 300, arcade.color.WHITE, 50, align="center",
+                             width=WINDOW_WIDTH)
+
+            if self.score_J > self.score_O:
+                arcade.draw_text("Vous aver gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
+
+            else:
+                arcade.draw_text("Vous aver perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
         else:
             arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
             self.players_sprites.draw()
-            self.scissor_sprite_list.draw()
-            self.rock_sprite_list.draw()
-            self.paper_sprite_list.draw()
+
+            if self.choix == "":
+                self.scissor_sprite_list.draw()
+                self.rock_sprite_list.draw()
+                self.paper_sprite_list.draw()
+            else:
+                if self.choix == "roche" :
+                    self.rock_sprite_list.draw()
+
+                if self.choix =="sciseau" :
+                    self.scissor_sprite_list.draw()
+
+                if self.choix == "papier":
+                    self.paper_sprite_list.draw()
                 
             if self.game_state == GameState.ROUND_ACTIVE:
                 arcade.draw_text(f"point: {self.score_J}", 300, 250, arcade.color.WHITE, 20)
                 arcade.draw_text(f"point: {self.score_O}", 910, 250, arcade.color.WHITE, 20)
 
             elif self.game_state == GameState.ROUND_DONE:
-                arcade.draw_text( self.resultat, 0,550, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH)
+                arcade.draw_text( self.resultat, 0,540, arcade.color.WHITE, 65, align="center", width=WINDOW_WIDTH)
 
-            elif self.game_state == GameState.GAME_OVER:
-                arcade.draw_text("Apuiyer sur espace pour recommencer", 0, 300, arcade.color.WHITE, 50, align="center",width=WINDOW_WIDTH)
 
-                if self.score_J > self.score_O:
-                    arcade.draw_text("Vous aver gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
 
-                else:
-                    arcade.draw_text("Vous aver perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
     def on_update(self, delta_time):
         """
         All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
         """
+
         if self.game_state != GameState.ROUND_ACTIVE:
             return
 
@@ -146,7 +169,20 @@ class GameView(arcade.View):
 
          # si déterminé gagnant, passer en ROUND_DONE
         if self.score_J == 3 or self.score_O == 3:
-            self.game_state = GameState.GAME_OVER
+            self.score_O = 0
+            self.score_J = 0
+            arcade.schedule_once(self.remove_info, 0.5)
+            return
+
+
+
+    def remove_info(self, delta_time):
+
+        self.game_state = GameState.GAME_OVER
+        print(self.score_J)
+        print(self.score_O)
+
+
 
 
     def on_key_press(self, key, key_modifiers):
@@ -156,12 +192,16 @@ class GameView(arcade.View):
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
+
         if key == arcade.key.SPACE:
+            if self.score_J == 3 or self.score_O == 3:
+                return
+
             if self.game_state == GameState.NOT_STARTED:
                 self.game_state = GameState.ROUND_ACTIVE
 
             elif self.game_state == GameState.GAME_OVER:
-                self.game_state = GameState.ROUND_ACTIVE
+                self.reset = True
 
             elif self.game_state == GameState.ROUND_DONE:
                 self.game_state = GameState.ROUND_ACTIVE
@@ -172,6 +212,7 @@ class GameView(arcade.View):
         """
         Called when the user presses a mouse button.
         """
+
         if self.game_state != GameState.ROUND_ACTIVE:
             return
 
