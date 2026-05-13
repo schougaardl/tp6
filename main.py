@@ -63,15 +63,18 @@ class GameView(arcade.View):
         self.resultat = " "
         self.score_J = 0
         self.score_O = 0
-
-        self.reset = False
     def reset(self):
         """Reset the game to the initial state."""
         # Do changes needed to restart the game here if you want to support that
-        if self.reset == True :
-            self.clear
+        self.game_state = GameState.NOT_STARTED
+        self.choix = ""
+        self.choix_ord = ""
+        self.resultat = " "
+        self.score_J = 0
+        self.score_O = 0
 
-        pass
+
+
 
     def on_draw(self):
         """
@@ -91,10 +94,10 @@ class GameView(arcade.View):
                              width=WINDOW_WIDTH)
 
             if self.score_J > self.score_O:
-                arcade.draw_text("Vous aver gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
+                arcade.draw_text("Vous avez gagné!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
 
             else:
-                arcade.draw_text("Vous aver perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
+                arcade.draw_text("Vous avez perdu!", 0, 400, arcade.color.WHITE, 50, align="center", width=WINDOW_WIDTH)
         else:
             arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
             self.players_sprites.draw()
@@ -169,8 +172,6 @@ class GameView(arcade.View):
 
          # si déterminé gagnant, passer en ROUND_DONE
         if self.score_J == 3 or self.score_O == 3:
-            self.score_O = 0
-            self.score_J = 0
             arcade.schedule_once(self.remove_info, 0.5)
             return
 
@@ -194,14 +195,12 @@ class GameView(arcade.View):
         """
 
         if key == arcade.key.SPACE:
-            if self.score_J == 3 or self.score_O == 3:
-                return
 
             if self.game_state == GameState.NOT_STARTED:
                 self.game_state = GameState.ROUND_ACTIVE
 
             elif self.game_state == GameState.GAME_OVER:
-                self.reset = True
+                self.reset()
 
             elif self.game_state == GameState.ROUND_DONE:
                 self.game_state = GameState.ROUND_ACTIVE
