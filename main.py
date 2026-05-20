@@ -8,7 +8,7 @@ import arcade
 import arcade.color
 
 from game_state import GameState
-
+from attack_type import AttackAnimation
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -33,13 +33,13 @@ class GameView(arcade.View):
         self.ord_sprite = arcade.Sprite("assets/compy.png", scale=2.3)
         self.ord_sprite.position = (950, 400)
 
-        self.paper_sprite = arcade.Sprite("assets/spaper.png", scale=0.5)
+        self.paper_sprite = arcade.Sprite(AttackType.PAPER)
         self.paper_sprite.position = (345, 170)
 
-        self.rock_sprite = arcade.Sprite("assets/srock.png", scale=0.5)
+        self.rock_sprite = arcade.Sprite(AttackType.ROCK)
         self.rock_sprite.position = (190, 170)
 
-        self.scissor_sprite = arcade.Sprite( "assets/scissors.png", scale= 0.5)
+        self.scissor_sprite = arcade.Sprite( AttackType.SCISSORS)
         self.scissor_sprite.position = (520, 170)
 
         self.player_sprite = arcade.Sprite("assets/faceBeard.png", scale=0.5)
@@ -63,6 +63,16 @@ class GameView(arcade.View):
         self.resultat = " "
         self.score_J = 0
         self.score_O = 0
+
+    def change_position(self):
+        self.paper_sprite.position = (950, 170)
+        self.rock_sprite.position = (950, 170)
+        self.scissor_sprite.position = (950, 170)
+    def return_position(self):
+        self.paper_sprite.position = (345, 170)
+        self.rock_sprite.position = (190, 170)
+        self.scissor_sprite.position = (520, 170)
+
     def reset(self):
         """Reset the game to the initial state."""
         # Do changes needed to restart the game here if you want to support that
@@ -85,6 +95,7 @@ class GameView(arcade.View):
         # the screen to the background color, and erase what we drew last frame.
         self.clear()
         arcade.draw_text("Roche Papier Ciseaux", 0, 650, arcade.color.WHITE, 60, align="center", width=WINDOW_WIDTH )
+
         if self.game_state == GameState.NOT_STARTED :
             arcade.draw_text("apuiyer sur espace pour commencer", 0, 400,arcade.color.WHITE,50, align="center", width=WINDOW_WIDTH)
 
@@ -102,6 +113,8 @@ class GameView(arcade.View):
             arcade.draw_text("Roche          Papier           Ciseaux", 140, 100, arcade.color.WHITE, 25)
             self.players_sprites.draw()
 
+            self.return_position()
+
             if self.choix == "":
                 self.scissor_sprite_list.draw()
                 self.rock_sprite_list.draw()
@@ -115,7 +128,7 @@ class GameView(arcade.View):
 
                 if self.choix == "papier":
                     self.paper_sprite_list.draw()
-                
+
             if self.game_state == GameState.ROUND_ACTIVE:
                 arcade.draw_text(f"point: {self.score_J}", 300, 250, arcade.color.WHITE, 20)
                 arcade.draw_text(f"point: {self.score_O}", 910, 250, arcade.color.WHITE, 20)
@@ -123,14 +136,36 @@ class GameView(arcade.View):
             elif self.game_state == GameState.ROUND_DONE:
                 arcade.draw_text( self.resultat, 0,540, arcade.color.WHITE, 65, align="center", width=WINDOW_WIDTH)
 
+                self.change_position()
 
+                if self.choix_ord == "":
+                    self.scissor_sprite_list.draw()
+                    self.rock_sprite_list.draw()
+                    self.paper_sprite_list.draw()
+                else:
+                    if self.choix_ord == "roche":
+                        self.rock_sprite_list.draw()
 
-    def on_update(self, delta_time):
+                    if self.choix_ord == "sciseau":
+                        self.scissor_sprite_list.draw()
+
+                    if self.choix_ord == "papier":
+                        self.paper_sprite_list.draw()
+
+    def on_update(self, delta_time: float = 1 / 60):
         """
         All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
         """
+
+
+        self.current_texture += 1
+        if self.current_texture < len(self.textures):
+            self.set_texture(self.current_texture)
+        else:
+            self.current_texture = 0
+            self.set_texture(self.current_texture)
 
         if self.game_state != GameState.ROUND_ACTIVE:
             return
