@@ -2,6 +2,7 @@
 Lars Schougaard 406
 jeux de roche papier ciseaux
 """
+
 import random
 
 import arcade
